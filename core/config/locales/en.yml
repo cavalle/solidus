@@ -1790,6 +1790,7 @@ en:
       order have become ineligible and were removed. Please check the new order amounts
       and try again.
     promotion_uses: Promotion uses
+    promotion_without_actions_warning: 'Someone tried to use a promotion without actions. Coupon code: %{coupon_code}'
     promotionable: Promotable
     promotions: Promotions
     propagate_all_variants: Propagate all variants

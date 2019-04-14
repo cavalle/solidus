@@ -13,7 +13,7 @@ module Spree
 
       def apply
         if coupon_code.present?
-          if promotion.present? && promotion.actions.exists?
+          if promotion.present?
             handle_present_promotion(promotion)
           elsif promotion_code && promotion_code.promotion.inactive?
             set_error_code :coupon_code_expired
@@ -68,6 +68,7 @@ module Spree
       end
 
       def handle_present_promotion(promotion)
+        return promotion_without_actions if promotion.actions.empty?
         return promotion_usage_limit_exceeded if promotion.usage_limit_exceeded? || promotion_code.usage_limit_exceeded?
         return promotion_applied if promotion_exists_on_order?(order, promotion)
 
@@ -97,6 +98,11 @@ module Spree
 
       def promotion_applied
         set_error_code :coupon_code_already_applied
+      end
+
+      def promotion_without_actions
+        order.logger.warn I18n.t('spree.promotion_without_actions_warning', coupon_code: coupon_code)
+        set_error_code :coupon_code_not_found
       end
 
       def promotion_exists_on_order?(order, promotion)
